@@ -3,13 +3,22 @@ const self_url = site + window.location.pathname;
 const file_url = window.location.search.slice(1);
 const line_num = window.location.hash.slice(1);
 
+function updateTitle(url) {
+  const parts = url.split("/");
+  let fname = parts[parts.length - 1];
+  if (!fname) fname = 'index';
+  let t0 = document.title;
+  let t = `${fname} (${t0})`;
+  document.title = t;
+}
+
 function jumpToLine(str_num) {
   if (str_num.length === 0) {
-    console.log("no line number specified");
-    return false;
+    //console.log("no line number specified");
+    return true;
   }
   let num = parseInt(str_num);
-  console.log(`jump to line ${num}`);
+  //console.log(`jump to line ${num}`);
   const tables = document.getElementsByTagName("table");
   if (tables.length !== 1) {
     console.log(`Count of table: ${tables.length}, not 1`);
@@ -76,6 +85,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ele_code.textContent = text;
     hljs.highlightAll();
     hljs.initLineNumbersOnLoad();
+    updateTitle(url);
     waitJumpToLine(line_num);
   })
   .catch((error) => {

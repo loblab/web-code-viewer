@@ -2,7 +2,7 @@
 
 View specified source code in browser with syntax highlight.
 
-- Ver: 0.2
+- Ver: 0.2.1
 - Updated: 8/19/2023
 - Created: 8/19/2023
 - Author: loblab
