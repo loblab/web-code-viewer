@@ -26,3 +26,8 @@ h1 {
   font-size: x-large;
   margin-left: 15px;
 }
+
+.selected {
+  background-color: #c0c0ff;
+}
+

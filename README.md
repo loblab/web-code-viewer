@@ -2,7 +2,7 @@
 
 View specified source code in browser with syntax highlight.
 
-- Ver: 0.1
+- Ver: 0.2
 - Updated: 8/19/2023
 - Created: 8/19/2023
 - Author: loblab
@@ -11,7 +11,7 @@ View specified source code in browser with syntax highlight.
 
 - Easy to deploy, pure client side solution
 - Show line number
-- Jump to specified line (TODO)
+- Jump to specified line
 
 # Usage
 
@@ -26,4 +26,5 @@ then you can view the source code:
 
 ## History
 
+- 0.2 (08/19/2023): Jump to specified line number
 - 0.1 (08/19/2023): First working version with syntax highlight, line number
