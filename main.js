@@ -1,9 +1,4 @@
-const site = window.location.origin;
-const self_url = site + window.location.pathname;
-const file_url = window.location.search.slice(1);
-const line_num = window.location.hash.slice(1);
-
-function updateTitle(url) {
+function updateDocTitle(url) {
   const parts = url.split("/");
   let fname = parts[parts.length - 1];
   if (!fname) fname = 'index';
@@ -63,12 +58,16 @@ async function waitJumpToLine(n) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  const url = file_url ? file_url : self_url;
+  const site = window.location.origin;
+  const selfUrl = site + window.location.pathname;
+  const fileUrl = window.location.search.slice(1);
+  const lineNum = window.location.hash.slice(1);
+  const url = fileUrl ? fileUrl : selfUrl;
   const title = url.replace(site, '');
-  const ele_title = document.getElementById("title");
-  const ele_code = document.getElementById("code");
-  ele_title.textContent = title;
-  ele_title.href = url;
+  const titleElement = document.getElementById("title");
+  const codeElement = document.getElementById("code");
+  titleElement.textContent = title;
+  titleElement.href = url;
   fetch(url, {
     mode: 'cors',
     cache: "no-cache",
@@ -82,14 +81,14 @@ document.addEventListener("DOMContentLoaded", function() {
     return response.text();
   })
   .then((text) => {
-    ele_code.textContent = text;
+    codeElement.textContent = text;
     hljs.highlightAll();
     hljs.initLineNumbersOnLoad();
-    updateTitle(url);
-    waitJumpToLine(line_num);
+    updateDocTitle(url);
+    waitJumpToLine(lineNum);
   })
   .catch((error) => {
-    ele_code.textContent = `Could not fetch: ${error}`;
+    codeElement.textContent = `Could not fetch: ${error}`;
   });
 
 });
