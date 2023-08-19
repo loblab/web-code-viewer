@@ -1,9 +1,9 @@
 function updateDocTitle(url) {
   const parts = url.split("/");
   let fname = parts[parts.length - 1];
-  if (!fname) fname = 'index';
+  if (!fname) fname = "index";
   let t0 = document.title;
-  let t = `${fname} (${t0})`;
+  let t = `${fname} - ${t0}`;
   document.title = t;
 }
 
@@ -28,7 +28,7 @@ function jumpToLine(str_num) {
   num -= 1;
   if (num < 0) num = 0;
   let row = rows[num];
-  row.classList.add('selected');
+  row.classList.add("selected");
   num -= 10;
   if (num < 0) num = 0;
   row = rows[num];
@@ -53,7 +53,7 @@ function waitForElement(selector) {
 }
 
 async function waitJumpToLine(n) {
-  await waitForElement('td.hljs-ln-numbers');
+  await waitForElement("td.hljs-ln-numbers");
   return jumpToLine(n);
 }
 
@@ -63,13 +63,13 @@ document.addEventListener("DOMContentLoaded", function() {
   const fileUrl = window.location.search.slice(1);
   const lineNum = window.location.hash.slice(1);
   const url = fileUrl ? fileUrl : selfUrl;
-  const title = url.replace(site, '');
+  const title = url.replace(site, "");
   const titleElement = document.getElementById("title");
   const codeElement = document.getElementById("code");
   titleElement.textContent = title;
   titleElement.href = url;
   fetch(url, {
-    mode: 'cors',
+    mode: "cors",
     cache: "no-cache",
     credentials: "omit",
     referrerPolicy: "no-referrer"
