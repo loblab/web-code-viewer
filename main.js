@@ -1,6 +1,6 @@
-const MaxFileSize = 54321;
-const BinaryType = "^image/|octet-stream";
-const SourceType = "txt|log|h|hpp|hxx|inl|c|cc|cpp|cxx|mk|py|pl|sh|go|rb|java|groovy|awk|json|rst|md";
+const MaxFileSize = 262114;
+const BinaryType = "^(image|video|audio)/";
+const SourceType = "Makefile|\.(txt|log|h|hpp|hxx|inl|c|cc|cpp|cxx|mk|py|pl|sh|go|rb|java|groovy|awk|json|rst|md|ya?ml)$";
 
 function updateContent(text) {
   const codeElement = document.getElementById("code");
@@ -57,9 +57,9 @@ async function waitJumpToLine(n) {
   return jumpToLine(n);
 }
 
-function isSourceType(fileExt) {
+function isSourceType(fileName) {
   const regex = new RegExp(SourceType, "i");
-  if (fileExt.match(regex))
+  if (fileName.match(regex))
     return true;
   return false;
 }
@@ -72,7 +72,7 @@ function isBinaryType(fileType) {
 }
 
 function downloadShowCode(url, lineNum) {
-  console.log(`fetch ${url}`);
+  updateContent(`fetch ${url}...`);
   fetch(url, {
     mode: "cors",
     cache: "no-cache",
@@ -107,7 +107,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const title = url.replace(site, "");
   let fileName = url.split("/").pop();
   if (!fileName) fileName = "index.html";
-  const fileExt = fileName.split(".").pop();
 
   const t0 = document.title;
   document.title = `${fileName} - ${t0}`;
@@ -116,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function() {
   titleElement.textContent = title;
   titleElement.href = url;
 
-  if (isSourceType(fileExt)) {
+  if (isSourceType(fileName)) {
     downloadShowCode(url, lineNum);
     return;
   }

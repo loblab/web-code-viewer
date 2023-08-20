@@ -2,27 +2,26 @@
 
 View specified source code in browser with syntax highlight.
 
-- Ver: 0.3.0
+- Ver: 0.3.1
 - Updated: 8/20/2023
 - Created: 8/19/2023
 - Author: loblab
-
-## Features
-
-- Easy to deploy, pure client side solution, based on [highlight.js](https://highlightjs.org/)
-- Show line number, by [highlightjs-line-numbers.js](https://github.com/wcoder/highlightjs-line-numbers.js)
-- Specify source file in url (?file-url)
-- Jump to specified line (specified in url, #num)
-- Only show text file (detected by file extensions, content types, file size)
 
 ![Code inside site with absolute path](https://raw.githubusercontent.com/loblab/web-code-viewer/main/screenshot1.png)
 
 ![Code cross site and jump to line](https://raw.githubusercontent.com/loblab/web-code-viewer/main/screenshot2.png)
 
+## Features
+
+- Easy to deploy, pure client side solution
+- Show line number
+- Jump to specified line
+- Only show text file (detected by file extensions, content types, file size)
+
 ## Usage
 
-Clone this repository to your web site, e.g. http://your.site/wcv/
-
+Clone this repository to your web site,
+say, http://your.site/wcv/
 then you can view the source code:
 - http://your.site/wcv/ : this index.html
 - http://your.site/wcv/?main.js : this main.js
