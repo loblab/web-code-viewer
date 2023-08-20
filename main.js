@@ -1,10 +1,10 @@
-function updateDocTitle(url) {
-  const parts = url.split("/");
-  let fname = parts[parts.length - 1];
-  if (!fname) fname = "index";
-  let t0 = document.title;
-  let t = `${fname} - ${t0}`;
-  document.title = t;
+const MaxFileSize = 54321;
+const BinaryType = "^image/|octet-stream";
+const SourceType = "txt|log|h|hpp|hxx|inl|c|cc|cpp|cxx|mk|py|pl|sh|go|rb|java|groovy|awk|json|rst|md";
+
+function updateContent(text) {
+  const codeElement = document.getElementById("code");
+  codeElement.textContent = text;
 }
 
 function jumpToLine(str_num) {
@@ -57,17 +57,22 @@ async function waitJumpToLine(n) {
   return jumpToLine(n);
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  const site = window.location.origin;
-  const selfUrl = site + window.location.pathname;
-  const fileUrl = window.location.search.slice(1);
-  const lineNum = window.location.hash.slice(1);
-  const url = fileUrl ? fileUrl : selfUrl;
-  const title = url.replace(site, "");
-  const titleElement = document.getElementById("title");
-  const codeElement = document.getElementById("code");
-  titleElement.textContent = title;
-  titleElement.href = url;
+function isSourceType(fileExt) {
+  const regex = new RegExp(SourceType, "i");
+  if (fileExt.match(regex))
+    return true;
+  return false;
+}
+
+function isBinaryType(fileType) {
+  const regex = new RegExp(BinaryType, "i");
+  if (fileType.match(regex))
+    return true;
+  return false;
+}
+
+function downloadShowCode(url, lineNum) {
+  console.log(`fetch ${url}`);
   fetch(url, {
     mode: "cors",
     cache: "no-cache",
@@ -81,14 +86,68 @@ document.addEventListener("DOMContentLoaded", function() {
     return response.text();
   })
   .then((text) => {
-    codeElement.textContent = text;
+    updateContent(text);
     hljs.highlightAll();
     hljs.initLineNumbersOnLoad();
-    updateDocTitle(url);
     waitJumpToLine(lineNum);
   })
   .catch((error) => {
-    codeElement.textContent = `Could not fetch: ${error}`;
+    let msg = `Could not fetch: ${error}`;
+    updateContent(msg);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  //console.log("DOM loaded...");
+  const site = window.location.origin;
+  const selfUrl = site + window.location.pathname;
+  const fileUrl = window.location.search.slice(1);
+  const lineNum = window.location.hash.slice(1);
+  const url = fileUrl ? fileUrl : selfUrl;
+  const title = url.replace(site, "");
+  let fileName = url.split("/").pop();
+  if (!fileName) fileName = "index.html";
+  const fileExt = fileName.split(".").pop();
+
+  const t0 = document.title;
+  document.title = `${fileName} - ${t0}`;
+
+  const titleElement = document.getElementById("title");
+  titleElement.textContent = title;
+  titleElement.href = url;
+
+  if (isSourceType(fileExt)) {
+    downloadShowCode(url, lineNum);
+    return;
+  }
+
+  console.log(`head ${url}`);
+  fetch(url, {
+    method: "HEAD",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "omit",
+    referrerPolicy: "no-referrer"
+  })
+  .then(response => {
+    const fileSize = response.headers.get("Content-Length");
+    const fileType = response.headers.get("Content-Type");
+    console.log(`${fileType}: ${fileSize} bytes`);
+    if (isBinaryType(fileType)) {
+      msg = `Not shown as the content is not text: ${fileType}\nClick the title to download it.`;
+      updateContent(msg);
+      return;
+    }
+    if (fileSize > MaxFileSize) {
+      msg = `Not shown as the content size (${fileSize}) is too large (> ${MaxFileSize})\nClick the title to download it.`;
+      updateContent(msg);
+      return;
+    }
+    downloadShowCode(url, lineNum);
+  })
+  .catch(error => {
+    let msg = `Could not fetch: ${error}`;
+    updateContent(msg);
   });
 
 });
