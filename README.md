@@ -14,6 +14,10 @@ View specified source code in browser with syntax highlight.
 - Jump to specified line
 - Only show text file (detected by file extensions, content types, file size)
 
+![Code inside site with absolute path](https://raw.githubusercontent.com/loblab/web-code-viewer/main/screenshot1.png)
+
+![Code cross site and jump to line](https://raw.githubusercontent.com/loblab/web-code-viewer/main/screenshot2.png)
+
 ## Usage
 
 Clone this repository to your web site,
